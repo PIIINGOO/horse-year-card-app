@@ -1,0 +1,25 @@
+{
+  "name": "horse-year-greeting-card",
+  "version": "1.0.0",
+  "description": "马年贺卡生成器 - AI 生成中国风水墨画贺卡",
+  "main": "api/generate.js",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.21.0"
+  },
+  "devDependencies": {
+    "vercel": "^37.0.0"
+  },
+  "keywords": [
+    "greeting-card",
+    "chinese-new-year",
+    "horse-year",
+    "ai-art",
+    "gemini"
+  ],
+  "author": "",
+  "license": "MIT"
+}

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>你有一张马年贺卡待签收</title>
+    <!-- Open Graph 标签会通过 JS 动态设置 -->
+    <meta property="og:title" content="你有一张马年贺卡待签收 🐴" id="ogTitle">
+    <meta property="og:description" content="点击查看来自好友的新春祝福" id="ogDescription">
+    <meta property="og:image" content="" id="ogImage">
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body class="card-page">
+    <div class="card-container">
+        <!-- 标题 -->
+        <h1 class="card-title">🐴 马年大吉 🐴</h1>
+
+        <!-- 拆卡前：信封状态 -->
+        <div class="envelope-section" id="envelopeSection">
+            <div class="envelope">
+                <div class="envelope-flap"></div>
+                <div class="envelope-body">
+                    <div class="seal">
+                        <span class="seal-text">福</span>
+                    </div>
+                    <div class="envelope-ribbon"></div>
+                    <p class="envelope-status">✉️ 待签收</p>
+                </div>
+            </div>
+
+            <div class="card-info">
+                <p class="info-line">来自：<span id="senderDisplay">神秘好友</span></p>
+                <p class="info-line">送给：<span id="recipientDisplay">你</span></p>
+            </div>
+
+            <button class="btn btn-open" id="openCardBtn">
+                🎉 拆开看看
+            </button>
+        </div>
+
+        <!-- 拆卡后：贺卡内容 -->
+        <div class="card-content hidden" id="cardContent">
+            <div class="card-image-wrapper">
+                <img id="cardImage" src="" alt="贺卡图片" class="card-image">
+            </div>
+
+            <div class="card-details">
+                <p class="detail-line">送给：<span id="recipientName">你</span></p>
+                <p class="detail-line">来自：<span id="senderName">好友</span></p>
+            </div>
+
+            <p class="greeting-text" id="greetingText">「马到成功，新春大吉！」</p>
+
+            <div class="card-actions">
+                <button class="btn btn-action" id="saveCardBtn">
+                    <span>💾</span> 保存图片
+                </button>
+                <button class="btn btn-action" id="makeOwnBtn">
+                    <span>🎨</span> 我也做一张
+                </button>
+            </div>
+        </div>
+
+        <!-- 错误状态 -->
+        <div class="error-section hidden" id="errorSection">
+            <div class="error-icon">😢</div>
+            <p class="error-text">贺卡不存在或已过期</p>
+            <button class="btn btn-primary" id="goMakeBtn">去制作一张</button>
+        </div>
+    </div>
+
+    <script src="js/card.js"></script>
+</body>
+</html>

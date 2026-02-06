@@ -1,0 +1,700 @@
+/* ===== 基础样式 ===== */
+:root {
+    --primary-red: #C41E3A;
+    --primary-red-light: #E85A71;
+    --gold: #D4AF37;
+    --ink-black: #2C2C2C;
+    --paper-white: #FAF8F5;
+    --paper-cream: #F5F0E6;
+    --jade-green: #50C878;
+    --soft-pink: #FFB7C5;
+    --pine-green: #2E8B57;
+    --mist-gray: #E8E4E0;
+    --shadow: rgba(0, 0, 0, 0.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Noto Serif SC', serif;
+    background: linear-gradient(135deg, var(--paper-cream) 0%, var(--paper-white) 100%);
+    min-height: 100vh;
+    color: var(--ink-black);
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* ===== 主容器 ===== */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+
+/* ===== 装饰元素 ===== */
+.decoration.horse-icon {
+    position: fixed;
+    top: 20px;
+    right: 30px;
+    font-size: 48px;
+    opacity: 0.8;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+/* 飘落花瓣效果 */
+.falling-petals {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    background-image:
+        radial-gradient(circle at 20% 20%, var(--soft-pink) 2px, transparent 2px),
+        radial-gradient(circle at 80% 30%, var(--soft-pink) 3px, transparent 3px),
+        radial-gradient(circle at 40% 70%, var(--soft-pink) 2px, transparent 2px),
+        radial-gradient(circle at 70% 80%, var(--soft-pink) 2px, transparent 2px);
+    background-size: 200px 200px;
+    animation: petals-fall 20s linear infinite;
+    opacity: 0.3;
+}
+
+@keyframes petals-fall {
+    0% { background-position: 0 0; }
+    100% { background-position: 200px 200px; }
+}
+
+/* ===== 主要内容布局 ===== */
+.main-content {
+    display: flex;
+    gap: 40px;
+    position: relative;
+    z-index: 1;
+}
+
+.left-panel, .right-panel {
+    flex: 1;
+    background: var(--paper-white);
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 8px 32px var(--shadow);
+    border: 1px solid var(--mist-gray);
+}
+
+/* ===== 上传区域 ===== */
+.upload-section {
+    position: relative;
+}
+
+.upload-area {
+    border: 2px dashed var(--mist-gray);
+    border-radius: 12px;
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: linear-gradient(135deg, var(--paper-cream) 0%, var(--paper-white) 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.upload-area:hover {
+    border-color: var(--primary-red);
+    background: linear-gradient(135deg, #FFF5F5 0%, var(--paper-white) 100%);
+}
+
+.upload-area.drag-over {
+    border-color: var(--primary-red);
+    background: rgba(196, 30, 58, 0.05);
+}
+
+.upload-placeholder {
+    text-align: center;
+    color: #888;
+}
+
+.upload-icon {
+    font-size: 64px;
+    margin-bottom: 16px;
+}
+
+.upload-hint {
+    font-size: 12px;
+    color: #aaa;
+    margin-top: 8px;
+}
+
+.preview-image, .generated-image {
+    max-width: 100%;
+    max-height: 350px;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+.upload-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+/* ===== 按钮样式 ===== */
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-red-light) 100%);
+    color: white;
+    flex: 1;
+}
+
+.btn-primary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(196, 30, 58, 0.3);
+}
+
+.btn-secondary {
+    background: var(--paper-cream);
+    color: var(--ink-black);
+    border: 1px solid var(--mist-gray);
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background: var(--mist-gray);
+}
+
+.btn-action {
+    background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-red-light) 100%);
+    color: white;
+    flex: 1;
+    padding: 14px 20px;
+    font-size: 15px;
+}
+
+.btn-action:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(196, 30, 58, 0.3);
+}
+
+/* ===== Loading 状态 ===== */
+.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    z-index: 10;
+}
+
+.loading-content {
+    text-align: center;
+}
+
+.loading-spinner {
+    width: 60px;
+    height: 60px;
+    border: 4px solid var(--mist-gray);
+    border-top-color: var(--primary-red);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.loading-text {
+    font-size: 16px;
+    color: var(--primary-red);
+    font-weight: 600;
+}
+
+/* ===== 表单样式 ===== */
+.form-group {
+    margin-bottom: 24px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink-black);
+    margin-bottom: 8px;
+}
+
+.form-group input[type="text"],
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--mist-gray);
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: inherit;
+    background: var(--paper-white);
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-red);
+}
+
+.form-group textarea {
+    min-height: 80px;
+    resize: vertical;
+    margin-top: 8px;
+}
+
+/* ===== 风格选择 ===== */
+.style-options {
+    display: flex;
+    gap: 12px;
+}
+
+.style-btn {
+    flex: 1;
+    padding: 16px;
+    border: 2px solid var(--mist-gray);
+    border-radius: 12px;
+    background: var(--paper-white);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.style-btn:hover {
+    border-color: var(--primary-red-light);
+}
+
+.style-btn.active {
+    border-color: var(--primary-red);
+    background: linear-gradient(135deg, #FFF5F5 0%, var(--paper-white) 100%);
+}
+
+.style-icon {
+    font-size: 32px;
+}
+
+/* ===== 模板选择 ===== */
+.template-options {
+    display: flex;
+    gap: 12px;
+}
+
+.template-item {
+    flex: 1;
+    cursor: pointer;
+    text-align: center;
+}
+
+.template-preview {
+    height: 80px;
+    border-radius: 8px;
+    border: 2px solid var(--mist-gray);
+    margin-bottom: 8px;
+    transition: all 0.3s ease;
+}
+
+.template-item:hover .template-preview {
+    border-color: var(--primary-red-light);
+}
+
+.template-item.active .template-preview {
+    border-color: var(--primary-red);
+    box-shadow: 0 0 0 2px rgba(196, 30, 58, 0.2);
+}
+
+.template-item span {
+    font-size: 12px;
+    color: #666;
+}
+
+/* 模板预览背景 */
+.template-1 {
+    background: linear-gradient(135deg, #FFE4E9 0%, #FFF5F5 100%);
+}
+
+.template-2 {
+    background: linear-gradient(135deg, #FFE5D0 0%, #FFF8F0 100%);
+}
+
+.template-3 {
+    background: linear-gradient(135deg, #E8F5E9 0%, #F5FFF5 100%);
+}
+
+/* ===== 复选框 ===== */
+.checkbox-group {
+    margin-top: 20px;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--primary-red);
+}
+
+/* ===== 操作按钮 ===== */
+.action-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 30px;
+}
+
+/* ===== 分享弹窗 ===== */
+.share-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+
+.share-content {
+    background: var(--paper-white);
+    padding: 30px;
+    border-radius: 16px;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+}
+
+.share-link-box {
+    display: flex;
+    gap: 8px;
+    margin: 16px 0;
+}
+
+.share-link-box input {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid var(--mist-gray);
+    border-radius: 8px;
+    font-size: 12px;
+}
+
+.btn-copy {
+    background: var(--primary-red);
+    color: white;
+    padding: 12px 20px;
+}
+
+.share-hint {
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 20px;
+}
+
+.btn-close {
+    background: var(--mist-gray);
+    color: var(--ink-black);
+}
+
+/* ===== 收卡页面样式 ===== */
+.card-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.card-container {
+    background: var(--paper-white);
+    border-radius: 20px;
+    padding: 40px;
+    max-width: 450px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 12px 48px var(--shadow);
+    border: 1px solid var(--mist-gray);
+}
+
+.card-title {
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: 32px;
+    color: var(--primary-red);
+    margin-bottom: 30px;
+}
+
+/* ===== 信封样式 ===== */
+.envelope {
+    width: 200px;
+    height: 150px;
+    margin: 0 auto 30px;
+    position: relative;
+    perspective: 1000px;
+}
+
+.envelope-body {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #8B4513 0%, #A0522D 50%, #8B4513 100%);
+    border-radius: 8px;
+    position: relative;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.envelope-flap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background: linear-gradient(180deg, #6B3E26 0%, #8B4513 100%);
+    clip-path: polygon(0 0, 50% 100%, 100% 0);
+    z-index: 1;
+    transform-origin: top;
+    transition: transform 0.6s ease;
+}
+
+.seal {
+    width: 50px;
+    height: 50px;
+    background: var(--primary-red);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 2;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.seal-text {
+    color: var(--gold);
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: 24px;
+}
+
+.envelope-ribbon {
+    position: absolute;
+    bottom: 20px;
+    width: 60%;
+    height: 3px;
+    background: var(--primary-red);
+}
+
+.envelope-status {
+    position: absolute;
+    bottom: 30px;
+    color: var(--paper-cream);
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+/* 信封打开动画 */
+.envelope.opening .envelope-flap {
+    transform: rotateX(180deg);
+}
+
+/* ===== 卡片信息 ===== */
+.card-info {
+    margin-bottom: 30px;
+}
+
+.info-line {
+    font-size: 16px;
+    margin: 8px 0;
+    color: var(--ink-black);
+}
+
+.btn-open {
+    background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-red-light) 100%);
+    color: white;
+    padding: 16px 40px;
+    font-size: 18px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    animation: pulse 2s infinite;
+}
+
+.btn-open:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(196, 30, 58, 0.4);
+}
+
+@keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(196, 30, 58, 0.4); }
+    50% { box-shadow: 0 0 0 15px rgba(196, 30, 58, 0); }
+}
+
+/* ===== 贺卡内容 ===== */
+.card-content {
+    animation: fadeInUp 0.6s ease;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card-image-wrapper {
+    margin-bottom: 24px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px var(--shadow);
+}
+
+.card-image {
+    width: 100%;
+    display: block;
+}
+
+.card-details {
+    margin-bottom: 20px;
+}
+
+.detail-line {
+    font-size: 14px;
+    color: #666;
+    margin: 4px 0;
+}
+
+.greeting-text {
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: 24px;
+    color: var(--primary-red);
+    margin: 24px 0;
+    line-height: 1.5;
+}
+
+.card-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 30px;
+}
+
+/* ===== 错误状态 ===== */
+.error-section {
+    padding: 40px;
+}
+
+.error-icon {
+    font-size: 64px;
+    margin-bottom: 20px;
+}
+
+.error-text {
+    font-size: 16px;
+    color: #888;
+    margin-bottom: 24px;
+}
+
+/* ===== 响应式布局 ===== */
+@media (max-width: 768px) {
+    .main-content {
+        flex-direction: column;
+    }
+
+    .decoration.horse-icon {
+        top: 10px;
+        right: 15px;
+        font-size: 32px;
+    }
+
+    .container {
+        padding: 10px;
+    }
+
+    .left-panel, .right-panel {
+        padding: 20px;
+    }
+
+    .upload-area {
+        min-height: 250px;
+    }
+
+    .style-options, .template-options {
+        flex-wrap: wrap;
+    }
+
+    .style-btn, .template-item {
+        flex: 1 1 calc(50% - 6px);
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
+    .card-container {
+        padding: 24px;
+    }
+
+    .card-title {
+        font-size: 24px;
+    }
+
+    .envelope {
+        width: 160px;
+        height: 120px;
+    }
+}

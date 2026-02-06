@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>马年贺卡生成器</title>
+    <meta property="og:title" content="马年贺卡生成器" />
+    <meta property="og:description" content="AI 生成中国风水墨画贺卡，送给你的新春祝福" />
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- 装饰元素 -->
+        <div class="decoration horse-icon">🐴</div>
+        <div class="falling-petals"></div>
+
+        <div class="main-content">
+            <!-- 左侧：上传区域 -->
+            <div class="left-panel">
+                <div class="upload-section">
+                    <div class="upload-area" id="uploadArea">
+                        <div class="upload-placeholder" id="uploadPlaceholder">
+                            <div class="upload-icon">📷</div>
+                            <p>点击上传照片</p>
+                            <p class="upload-hint">支持 jpg/png，5MB 以内</p>
+                            <p class="upload-hint">或拖拽到此处</p>
+                        </div>
+                        <img id="previewImage" class="preview-image hidden" alt="预览">
+                        <img id="generatedImage" class="generated-image hidden" alt="生成结果">
+                    </div>
+                    <input type="file" id="fileInput" accept="image/jpeg,image/png" hidden>
+
+                    <div class="upload-actions">
+                        <button class="btn btn-secondary" id="reuploadBtn" disabled>重新上传</button>
+                        <button class="btn btn-primary" id="generateBtn" disabled>生成水墨画</button>
+                    </div>
+
+                    <!-- Loading 状态 -->
+                    <div class="loading-overlay hidden" id="loadingOverlay">
+                        <div class="loading-content">
+                            <div class="loading-spinner"></div>
+                            <p class="loading-text">🐴 马年好运加载中...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右侧：编辑区域 -->
+            <div class="right-panel">
+                <div class="form-group">
+                    <label for="recipientName">送给</label>
+                    <input type="text" id="recipientName" placeholder="收件人名字" maxlength="20">
+                </div>
+
+                <div class="form-group">
+                    <label for="senderName">来自</label>
+                    <input type="text" id="senderName" placeholder="你的名字" maxlength="20">
+                </div>
+
+                <div class="form-group">
+                    <label for="greetingSelect">祝福语</label>
+                    <select id="greetingSelect">
+                        <option value="">-- 选择预设祝福语 --</option>
+                        <option value="马到成功，新春大吉！">马到成功，新春大吉！</option>
+                        <option value="龙马精神，万事如意！">龙马精神，万事如意！</option>
+                        <option value="策马奔腾，前程似锦！">策马奔腾，前程似锦！</option>
+                        <option value="一马当先，好运连连！">一马当先，好运连连！</option>
+                        <option value="马年行大运，福气满满来！">马年行大运，福气满满来！</option>
+                        <option value="金马迎春，阖家幸福！">金马迎春，阖家幸福！</option>
+                        <option value="马踏祥云，心想事成！">马踏祥云，心想事成！</option>
+                        <option value="千里马年，步步高升！">千里马年，步步高升！</option>
+                        <option value="马上有福，马上有钱，马上有一切！">马上有福，马上有钱，马上有一切！</option>
+                        <option value="愿你新的一年，快马加鞭，奔向美好！">愿你新的一年，快马加鞭，奔向美好！</option>
+                        <option value="custom">自定义...</option>
+                    </select>
+                    <textarea id="greetingText" placeholder="输入你的祝福语..." maxlength="100"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>风格选择</label>
+                    <div class="style-options">
+                        <button class="style-btn active" data-style="elegant">
+                            <span class="style-icon">🎨</span>
+                            <span>古风飘逸</span>
+                        </button>
+                        <button class="style-btn" data-style="cute">
+                            <span class="style-icon">🐰</span>
+                            <span>可爱Q版</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>贺卡模板</label>
+                    <div class="template-options">
+                        <div class="template-item active" data-template="1">
+                            <div class="template-preview template-1"></div>
+                            <span>水墨梅花</span>
+                        </div>
+                        <div class="template-item" data-template="2">
+                            <div class="template-preview template-2"></div>
+                            <span>新春福字</span>
+                        </div>
+                        <div class="template-item" data-template="3">
+                            <div class="template-preview template-3"></div>
+                            <span>祥云瑞马</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="showSenderName" checked>
+                        <span>分享时显示我的名字</span>
+                    </label>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-action" id="generateLinkBtn" disabled>
+                        <span>📤</span> 生成链接
+                    </button>
+                    <button class="btn btn-action" id="saveImageBtn" disabled>
+                        <span>💾</span> 保存图片
+                    </button>
+                </div>
+
+                <!-- 分享链接弹窗 -->
+                <div class="share-modal hidden" id="shareModal">
+                    <div class="share-content">
+                        <p>分享链接已生成：</p>
+                        <div class="share-link-box">
+                            <input type="text" id="shareLink" readonly>
+                            <button class="btn btn-copy" id="copyLinkBtn">复制</button>
+                        </div>
+                        <p class="share-hint">复制链接发送给微信好友吧！</p>
+                        <button class="btn btn-close" id="closeModalBtn">关闭</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
