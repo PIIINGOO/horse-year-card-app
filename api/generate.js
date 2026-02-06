@@ -1,5 +1,4 @@
 // Vercel Serverless Function - 调用 Gemini 生成水墨画
-const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 // Prompt 模板
 const PROMPTS = {
@@ -61,65 +60,91 @@ module.exports = async (req, res) => {
             return res.status(500).json({ success: false, error: 'API Key 未配置' });
         }
 
-        // 初始化 Gemini
-        const genAI = new GoogleGenerativeAI(apiKey);
-
-        // 使用支持图像生成的模型配置
-        const model = genAI.getGenerativeModel({
-            model: 'gemini-2.0-flash',
-            generationConfig: {
-                responseModalities: ['Text', 'Image']
-            }
-        });
-
         // 解析 base64 图片
         const base64Data = image.replace(/^data:image\/(png|jpeg|jpg);base64,/, '');
 
         // 获取对应的 prompt
         const prompt = PROMPTS[style] || PROMPTS.elegant;
 
-        // 调用 Gemini 生成图片
-        const result = await model.generateContent([
-            {
-                inlineData: {
-                    mimeType: 'image/jpeg',
-                    data: base64Data
-                }
-            },
-            { text: prompt }
-        ]);
+        // 使用 REST API 直接调用 Gemini
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`;
 
-        const response = await result.response;
+        const requestBody = {
+            contents: [
+                {
+                    parts: [
+                        {
+                            inline_data: {
+                                mime_type: 'image/jpeg',
+                                data: base64Data
+                            }
+                        },
+                        {
+                            text: prompt
+                        }
+                    ]
+                }
+            ],
+            generationConfig: {
+                responseModalities: ['TEXT', 'IMAGE']
+            }
+        };
+
+        console.log('Calling Gemini API...');
+
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestBody)
+        });
+
+        const data = await response.json();
+
+        console.log('Gemini API response status:', response.status);
+        console.log('Gemini API response:', JSON.stringify(data, null, 2));
+
+        if (!response.ok) {
+            console.error('Gemini API error:', data);
+            return res.status(500).json({
+                success: false,
+                error: data.error?.message || '生成失败',
+                details: data
+            });
+        }
 
         // 检查是否有生成的图片
-        if (response.candidates && response.candidates[0]) {
-            const candidate = response.candidates[0];
+        if (data.candidates && data.candidates[0]?.content?.parts) {
+            const parts = data.candidates[0].content.parts;
 
-            // 尝试获取生成的图片
-            if (candidate.content && candidate.content.parts) {
-                for (const part of candidate.content.parts) {
-                    if (part.inlineData) {
-                        const generatedImage = `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`;
-                        return res.status(200).json({
-                            success: true,
-                            image: generatedImage
-                        });
-                    }
+            for (const part of parts) {
+                if (part.inlineData || part.inline_data) {
+                    const inlineData = part.inlineData || part.inline_data;
+                    const generatedImage = `data:${inlineData.mimeType || inlineData.mime_type};base64,${inlineData.data}`;
+                    return res.status(200).json({
+                        success: true,
+                        image: generatedImage
+                    });
                 }
             }
 
-            // 如果没有图片，返回文本响应
-            const text = response.text();
-            return res.status(200).json({
-                success: false,
-                error: '未能生成图片，模型返回了文本描述',
-                message: text
-            });
+            // 如果没有图片，返回文本
+            for (const part of parts) {
+                if (part.text) {
+                    return res.status(200).json({
+                        success: false,
+                        error: '模型未生成图片，返回了文本描述',
+                        message: part.text
+                    });
+                }
+            }
         }
 
         return res.status(500).json({
             success: false,
-            error: '生成失败，请重试'
+            error: '生成失败，未收到有效响应',
+            details: data
         });
 
     } catch (error) {
