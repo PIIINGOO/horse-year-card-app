@@ -63,7 +63,14 @@ module.exports = async (req, res) => {
 
         // 初始化 Gemini
         const genAI = new GoogleGenerativeAI(apiKey);
-        const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash-exp' });
+
+        // 使用支持图像生成的模型配置
+        const model = genAI.getGenerativeModel({
+            model: 'gemini-2.0-flash',
+            generationConfig: {
+                responseModalities: ['Text', 'Image']
+            }
+        });
 
         // 解析 base64 图片
         const base64Data = image.replace(/^data:image\/(png|jpeg|jpg);base64,/, '');
@@ -79,7 +86,7 @@ module.exports = async (req, res) => {
                     data: base64Data
                 }
             },
-            prompt
+            { text: prompt }
         ]);
 
         const response = await result.response;
@@ -101,11 +108,11 @@ module.exports = async (req, res) => {
                 }
             }
 
-            // 如果没有图片，返回文本响应（可能是描述）
+            // 如果没有图片，返回文本响应
             const text = response.text();
             return res.status(200).json({
                 success: false,
-                error: '生成失败，请重试',
+                error: '未能生成图片，模型返回了文本描述',
                 message: text
             });
         }
